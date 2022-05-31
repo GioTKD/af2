@@ -17,17 +17,79 @@ export default class OnBoarding extends Web3Istance{
             console.log("qua")
             console.log(printerInfo["address"]);
             await this.contract.methods.addPrinter(
-                printerInfo["address"],
-                this.utils.fromAscii(printerInfo["name"]),
-                printerInfo['material'],
+                printerInfo.address,
+                this.utils.fromAscii(printerInfo.name),
+                printerInfo.materiale,
                 [0,1,2], 
-                parseInt(printerInfo["nozzlesMount"]),
-                parseInt(printerInfo["printerTemp"]),
-                parseInt(printerInfo["bedTemp"]),
-                parseInt(printerInfo["volume"]),
-                printerInfo["soluble"],
-                printerInfo["foodSafety"]).send({from:account,gas:4600000}) 
+                parseInt(printerInfo.nozzles),
+                parseInt(printerInfo.printTemp),
+                parseInt(printerInfo.BedTemp),
+                parseInt(printerInfo.volume),
+                printerInfo.soluble,
+                printerInfo.FoodSafety).send({from:account,gas:4600000}) 
         }
 
+        async getPrinters(){
+            let account = await this.checkIfWalletIsConnected();
+            let result=await this.contract.methods.getMakerPrinters().call({from:account});
+           console.log(account)
+            return result;
+        }
+        
+        async RemovePrinter(index){
+            let account = await this.checkIfWalletIsConnected();
+            await this.contract.methods.RemovePrinter(index).send({from:account})
+        }
+
+        async getPrinter(index){
+            let account = await this.checkIfWalletIsConnected();
+            let result = await this.contract.methods.getMakerPrinter(index).call({from:account});
+            console.log("onboard")
+            return result;
+        }
+
+        async addMaterial(material){
+            let account = await this.checkIfWalletIsConnected();
+            console.log(account)
+            let result = await this.contract.methods.addMaterials(
+                this.utils.asciiToHex(material.name),
+                material.materiale,
+                material.colors,
+                material.quantityKG,
+                material.printTemp,
+                material.bedTemp).send({from:account,gas:4600000});
+                console.log(result)
+
+        }
+
+        async updateMaterial(name, type, color, quantityKG, printTemp,bedTemp){
+            let account = await this.checkIfWalletIsConnected();
+            await this.contract.methods.updateMaterial(this.utils.asciiToHex(name), type, color, quantityKG, printTemp,bedTemp).send({from:account});
+
+        }
+
+        async removeMaterial(name, type,index){
+            let account = await this.checkIfWalletIsConnected();
+            await this.contract.methods.removeMaterial(name,type,index).send({from:account,gas:4600000})
+        }
+
+        async mountMaterial(name, type, printer){
+            let account = await this.checkIfWalletIsConnected();
+            await this.contract.methods.mountMaterial(name, type, printer).send({from:account})
+        }
+
+        async getMaterials(){
+            let account = await this.checkIfWalletIsConnected();
+            let result = await this.contract.methods.getMaterials().call({from:account});
+           console.log(account)
+            return result;
+        }
+
+        async CheckMaterial(name){
+            let account = await this.checkIfWalletIsConnected();
+            let result =  await this.contract.methods.checkMaterial(this.utils.asciiToHex(name)).call({from:account});
+
+            return result
+        }
 
 }

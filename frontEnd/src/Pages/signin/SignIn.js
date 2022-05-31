@@ -39,10 +39,10 @@ export default function SignIn(){
                 else
                     window.ethereum.request({ method: "eth_requestAccounts"} )*/
 
-    const onlyHour= (e) => {
+    /*const onlyHour= (e) => {
         let hour = e.target.value.split(':')[0]
         e.target.value = `${hour}:00`
-      }
+      }*/
       
     const handleSubmit= async(event)=>{
         event.preventDefault();

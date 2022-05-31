@@ -43,7 +43,43 @@ let myPrinters={printers:[
     nozzlesMounted:'Brass',
     soluble:'yes',
     foodSafety:'no'
+},
+    {
+        address:"0x1a22BCB21fde9924EbfD414D2099c6Fe5C13FD10",
+        name:"testPrinter-4",
+        nozzlesMounted:'Brass',
+        soluble:'yes',
+        foodSafety:'no'
+    
 }]}
+
+export const material=[
+    {value:"0" , label:"ABS"},
+    {value:"1",label:"PLA"},
+    {value:"2",label:"PETG"}]  
+    
+  export const color=[
+    {value:"0", label:"NONE"},
+    {value:"1", label:"BLACK"},
+    {value:"2", label:"WHITE"},
+    {value:"3", label:"BROWN"},
+    {value:"4",label:"GRAY"},
+    {value:"5", label:"YELLOW"},
+    {value:"6", label:"ORANGE"},
+    {value:"7", label:"RED"},
+    {value:"8", label:"PINK"},
+    {value:"9", label:"PURPLE"},
+    {value:"10", label:"BLU"},
+    {value:"11", label:"GREEN"}]
+
+    export function getMaterial(){
+        return material;
+    }
+
+    export function getColor(){
+        return color;
+    }
+
 
 
 

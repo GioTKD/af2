@@ -3,6 +3,8 @@ import OnBoarding from '../../SmartContracts/OnBoarding/OnBoarding';
 import { HomeNav } from '../../component/Navbar/homeNav';
 import Select from 'react-select';
 import './LoadPrinter.css';
+import {UserNav} from "../../component/Navbar/homeNav" 
+import { useEffect } from 'react';
 
 
 export default function LoadPrinter(){
@@ -11,10 +13,41 @@ export default function LoadPrinter(){
     const [errorMessage,SetErrorMessage]=useState('');
     let  printerData={"soluble":true,"foodSaety":true,"material":[]};
     const [section,setSection]=useState(1);
+    const [address, setAddress] = useState("");
+    const [name,Setname] = useState("");
+    const [materiale,SetMateriale] =useState([]);
+    const [nozzles,SetNozzles] = useState(0);
+    const [printTemp,SetPrintTemp] = useState(0);
+    const [BedTemp,SetBedTemp] = useState(0);
+    const [volume,SetVolume] = useState(0);
+    const [soluble,SetSolub] = useState(false);
+    const [FoodSafety,SetFood] = useState(false);
+    const[OneVal,SetOneVal] = useState(0);
+
     const material=[
         {value:"0" , label:"ABS"},
         {value:"1",label:"PLA"},
         {value:"2",label:"PETG"}]
+
+    const nozzle = [
+        {value:"0", label:"1mm"},
+        {value:"1", label:"2mm"},
+        {value:"2", label:"3mm"},
+        {value:"3", label:"4mm"},
+        {value:"4", label:"5mm"},
+        {value:"5", label:"6mm"}
+    ]
+
+    //PRENDO SOLO 1 ELEMENTO
+    const MountedNozzles = [
+        {value:"0", label:"1mm"},
+        {value:"1", label:"2mm"},
+        {value:"2", label:"3mm"},
+        {value:"3", label:"4mm"},
+        {value:"4", label:"5mm"},
+        {value:"5", label:"6mm"}
+    ]
+
     let onBoarding=new OnBoarding();
 
 
@@ -31,7 +64,7 @@ export default function LoadPrinter(){
             values.push(parseInt(value.value));
             
         })
-        printerData['material']=values;
+        SetMateriale(values);
         if(values.length===0)
             printerData['material']=undefined;
         console.log(printerData['material']);
@@ -42,13 +75,14 @@ export default function LoadPrinter(){
 
     const handleSubmit= async(event)=>{
         event.preventDefault();
-        let result=checkError(printerData);
+        let result=false;
         if(result){
             console.log("webekbj")
             return}
         else {
-            console.log("webekbj")
-            await onBoarding.addPrinter(printerData);
+            let printerobj = {address : address, name: name, materiale: materiale, nozzles:nozzles, printTemp:printTemp, BedTemp: BedTemp, volume:volume, soluble: soluble, FoodSafety: FoodSafety}
+            console.log(printerobj)
+            await onBoarding.addPrinter(printerobj);
         }
 
     }
@@ -69,14 +103,20 @@ export default function LoadPrinter(){
         else return false;
 
     
-    }       
+    }      
+    
+    
+useEffect(() => {
+    console.log(OneVal)
+  },[])
+  
 
 
     return (
 
         <div>
             <div className='sign'>
-            <HomeNav/>
+            <UserNav/>
             <h1>Add printer</h1>
             <div className='SignIn'>
             <form  onSubmit={handleSubmit}>
@@ -84,12 +124,12 @@ export default function LoadPrinter(){
             <div className="sectionPage" style={{display:section===1?('block'):('none')}}>
                 <label>
                     <p>Address</p>
-                    <input type="text" name="address" onChange={event => printerData["address"]=event.target.value} autoComplete="off" required minLength="4" maxLength="90"></input>
+                    <input type="text" name="address" onChange={(event) =>{setAddress(event.target.value)}} autoComplete="off" required minLength="4" maxLength="90"></input>
                 </label><br/>
 
                 <label>
                     <p>Name</p>
-                    <input type="text" name="username" onChange={event => printerData["name"]=event.target.value} autoComplete="off" required minLength="4" maxLength="10"></input>
+                    <input type="text" name="username" onChange={event =>{ Setname(event.target.value)}} autoComplete="off" required minLength="4" maxLength="10"></input>
                 </label><br/>
                 <label>
                 <p>Material</p>
@@ -99,8 +139,8 @@ export default function LoadPrinter(){
                    <Select  isMulti 
                     options={material}
                     getOptionValue={(option)=>option.value}
-                    onChange={(option)=>{handleChange(option)
-                    console.log(option)}}/>
+                    onChange={(option)=>{handleChange(option);
+                    console.log(option);}}/>
                     </div>
                 </label><br/>
                 </div>
@@ -108,25 +148,35 @@ export default function LoadPrinter(){
                 <div className="sectionPage" style={{display:section===2?('block'):('none')}}>
                 <label>
                 <p>Nozzles</p>
-                <input type="number" id="tentacles" name="tentacles"
-                    min="1" max="10" onChange={event => {printerData["nozzles"]=event.target.value
-                        }}/>
-                
-
-                </label><br/>
+                <div style={{
+                        width:"200px",
+                        margin:"auto"}}>
+                   <Select  isMulti 
+                    options={nozzle}
+                    getOptionValue={(option)=>option.value}
+                    onChange={(option)=>{handleChange(option);
+                    console.log(option);}}/>
+                    </div>
+</label><br/>
                 <label>
                 <p>Nozzles mounted</p>
-                    <input type="number" id="tentacles" name="tentacles"
+                <div style={{
+                        width:"200px",
+                        margin:"auto"}}>
+                        <Select onChange={(e)=>{SetOneVal(e)}}
+                        options ={MountedNozzles}
+                        />
+                    </div>
+                   {/* <input type="number" id="tentacles" name="tentacles"
                         min="1" max="10" onChange={event => {printerData["nozzlesMount"]=event.target.value
-                        }}/> 
+                        }}/>*/} 
 
                 </label><br/>
 
                 <label>
                 <p>Print Temperature</p>
                 <input type="number" id="tentacles" name="tentacles"
-                    min="1" max="10" onChange={event => {printerData["printerTemp"]=event.target.value
-                    }}/>
+                    min="1" max="10" onChange={event => {SetPrintTemp(event.target.value)}}/>
                 </label><br/>
                 </div>
 
@@ -134,21 +184,19 @@ export default function LoadPrinter(){
                 <label>
                 <p>Bed Temperature</p>
                 <input type="number" id="tentacles" name="tentacles"
-                    min="1" max="10" onChange={event => {printerData["bedTemp"]=event.target.value
-                    }}/>
+                    min="1" max="10" onChange={event => {SetBedTemp(event.target.value)}}/>
                 </label><br/>
 
                 <label>
                 <p>Volume</p>
                 <input type="number" id="tentacles" name="tentacles"
-                    min="1" max="10" onChange={event => {printerData["bedTemp"]=event.target.value
-                    }}/>
+                    min="1" max="10" onChange={event => {SetVolume(event.target.value)}}/>
 
                 </label><br/>
 
                 <label>
                 <p>soluble</p>
-                    <select name="soluble" id="soluble" onClick={(e)=>printerData["soluble"]=e.target.value}>
+                    <select name="soluble" id="soluble" onClick={(e)=>SetSolub(e.target.value)}>
                         <option value={true}>Yes</option>
                         <option value={false}>No</option>
                     </select>
@@ -156,7 +204,7 @@ export default function LoadPrinter(){
 
                 <label>
                 <p>Food Safety</p>
-                    <select name="food" id="food" onClick={(e)=>printerData["foodSafety"]=e.target.value}>
+                    <select name="food" id="food" onClick={(e)=>SetFood(e.target.value)}>
                     <option value={true}>Yes</option>
                     <option value={false}>No</option>
                 </select>
