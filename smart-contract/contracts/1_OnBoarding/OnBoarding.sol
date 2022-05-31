@@ -122,15 +122,22 @@ contract OnBoarding {
         materialsName[msg.sender].push(name);
     }
 
+    function getMaterialsName()
+    public view returns (bytes32 [] memory mats){
+        return materialsName[msg.sender];
+    }
+
     function getMaterials()
     public view
     returns (MaterialDetails[] memory av_materials){
         
         uint256 n_materials = materials[msg.sender][MaterialType.ABS].length+materials[msg.sender][MaterialType.PETG].length+materials[msg.sender][MaterialType.PLA].length;
         av_materials = new MaterialDetails[](n_materials);
+        uint256 x = 0;
         for (uint i = 0; i < 3; i++){
             for(uint j=0; j < materials[msg.sender][MaterialType(i)].length; j++){
-                av_materials[i+j] = materials[msg.sender][MaterialType(i)][j];
+                av_materials[x] = materials[msg.sender][MaterialType(i)][j];
+                x++;
             }
         }
         return av_materials;
@@ -148,7 +155,13 @@ contract OnBoarding {
         }
     }
 
-    function removeMaterial(bytes32 name, MaterialType mType, uint256 index) 
+    function getMaterial(uint256 index)
+    public payable{
+
+    }
+
+    
+    function removeMaterial(bytes32 name, MaterialType mType) 
     public payable{
         require( Iuser.isMaker(msg.sender) == true, "Only Maker can delete Materials.");
         require(checkMaterial(name) == true, "No material with this name");
@@ -158,11 +171,16 @@ contract OnBoarding {
                 materials[msg.sender][mType][j] = NONE;
             }
         }*/
-        materials[msg.sender][mType][index]=materials[msg.sender][mType] [materials[msg.sender][mType].length-1];
-        materials[msg.sender][mType].pop();
+                for(uint j=0; j < materials[msg.sender][mType].length; j++){
+            if (materials[msg.sender][mType][j].name==name){
+                    materials[msg.sender][mType][j]=materials[msg.sender][mType] [materials[msg.sender][mType].length-1];
+                    materials[msg.sender][mType].pop();
+            }
+        }
+        
         for(uint256 i =0; i< materialsName[msg.sender].length;i++){
             if(materialsName[msg.sender][i]== name){
-            materialsName[msg.sender][i]==materialsName[msg.sender][materialsName[msg.sender].length-1];
+            materialsName[msg.sender][i]=materialsName[msg.sender][materialsName[msg.sender].length-1];
             materialsName[msg.sender].pop();
             break;
             }

@@ -41,6 +41,12 @@ export default function MyMaterials() {
     window.location.reload()
   }
 
+  const getMaterialsName = async()=>{
+    const onboard = new OnBoarding();
+    await onboard.GetMaterialsName();
+
+  }
+
   useEffect(()=>{
     async function getMaterials(){
       const onboarding = new OnBoarding();
@@ -48,7 +54,7 @@ export default function MyMaterials() {
       var mats = await onboarding.getMaterials();
       console.log(mats)
       let stringa = "ciao"
-
+      getMaterialsName();
       const materia = [
         "ABS", "PLA", "PETG"
       ]

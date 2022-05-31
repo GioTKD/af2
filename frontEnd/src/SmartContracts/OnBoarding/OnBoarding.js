@@ -51,7 +51,8 @@ export default class OnBoarding extends Web3Istance{
         async addMaterial(material){
             let account = await this.checkIfWalletIsConnected();
             console.log(account)
-            let result = await this.contract.methods.addMaterials(
+
+           let result = await this.contract.methods.addMaterials(
                 this.utils.asciiToHex(material.name),
                 material.materiale,
                 material.colors,
@@ -59,8 +60,7 @@ export default class OnBoarding extends Web3Istance{
                 material.printTemp,
                 material.bedTemp).send({from:account,gas:4600000});
                 console.log(result)
-
-        }
+           }
 
         async updateMaterial(name, type, color, quantityKG, printTemp,bedTemp){
             let account = await this.checkIfWalletIsConnected();
@@ -68,9 +68,10 @@ export default class OnBoarding extends Web3Istance{
 
         }
 
-        async removeMaterial(name, type,index){
+        async removeMaterial(name, type){
             let account = await this.checkIfWalletIsConnected();
-            await this.contract.methods.removeMaterial(name,type,index).send({from:account,gas:4600000})
+            console.log(this.utils.toUtf8(name))
+            await this.contract.methods.removeMaterial(name,type).send({from:account,gas:4600000})
         }
 
         async mountMaterial(name, type, printer){
@@ -82,6 +83,7 @@ export default class OnBoarding extends Web3Istance{
             let account = await this.checkIfWalletIsConnected();
             let result = await this.contract.methods.getMaterials().call({from:account});
            console.log(account)
+           console.log(result)
             return result;
         }
 
@@ -90,6 +92,14 @@ export default class OnBoarding extends Web3Istance{
             let result =  await this.contract.methods.checkMaterial(this.utils.asciiToHex(name)).call({from:account});
 
             return result
+        }
+
+        async GetMaterialsName(){
+            let account = await this.checkIfWalletIsConnected();
+            let result = await this.contract.methods.getMaterialsName().call({from:account})
+            result.forEach(element => {
+                console.log(this.utils.toUtf8(element))
+            });
         }
 
 }
