@@ -26,6 +26,8 @@
     color:#FFFFFF;
     font-weight:400;
     border-radius:5px;
+    position: relative;
+    margin-right: 25%;
 }
 
 .printerButton:hover{

@@ -31,7 +31,7 @@ export  function UserNav(){
                 {/*<Link className='section' to="/addprinter">Add printers</Link>*/}
                 {/*<Link className='section' to="/AddMaterials">Add Materials</Link>*/}
                 <Link className='section' to="/MyMaterials">My Materials</Link>
-
+                <Link className='section' to="/AddDesign">Add Design</Link>
                 
                 </div>
                 </nav>

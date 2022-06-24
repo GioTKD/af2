@@ -5,6 +5,7 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useEffect} from "react";
 import { useState } from "react";
 import OnBoarding from "../../../SmartContracts/OnBoarding/OnBoarding";
+import Select from 'react-select';
 
 export default function Modify(){
 
@@ -15,6 +16,23 @@ export default function Modify(){
     let {id}  = useParams();
     console.log(id)
 
+    const[materia,Setmateria] = useState({});
+
+
+    const material=[
+        {value:"0" , label:"ABS"},
+        {value:"1",label:"PLA"},
+        {value:"2",label:"PETG"}]
+
+    const food = [
+        {value:"0", label:"Si"},
+        {value:"1",label:"No"}]
+
+    const solub = [
+        {value:"0", label:"Si"},
+        {value:"1",label:"No"}]
+
+    
 
     async function DataChange(){
     /*    console.log(NamePrinter)
@@ -44,6 +62,23 @@ export default function Modify(){
     },[])
 
 
+    /*const handleChange = (option,type)=>{
+        let values=[]
+        switch(type){
+            case "food" : 
+        }
+        option.map((value)=>{
+            values.push(parseInt(value.value));
+            
+        })
+        SetMateriale(values);
+        if(values.length===0)
+            printerData['material']=undefined;
+        console.log(printerData['material']);
+        
+
+    }*/
+
     return(
         <div>
             <UserNav/>
@@ -52,24 +87,55 @@ export default function Modify(){
             <div className="SignIn">
                 
         <label>
-            <p>Name : {id}</p>
+            <p>Name : {/*id*/}</p>
             <input type="text" placeholder="Name" onChange={(event)=> SetNamePrinter(event.target.value)}/>
         </label>
 
         <label>
-        <p>NozzlesMounted :{Nozzles}</p>
+        <p>NozzlesMounted :{/*Nozzles*/}</p>
         <p><input type="number" placeholder="nozzles"onChange={(event)=> SetNozzles(event.target.value)}/></p>
         </label>
 
         <label>
-        <p>Soluble: {Soluble.toString()}</p>
-        <button className="printerButton" value={Soluble} onChange={e => SetSoluble(e.target.value)} onClick={onClickSol}>{Soluble.toString()}</button>
+        <p>Materiale solubile</p>
+        
+        <div style={{
+                        width:"200px",
+                        margin:"auto"}}>
+        <Select 
+                    options={solub}
+                    getOptionValue={(option)=>option.value}
+                    onChange={(option)=>{(Setmateria({...materia,"soluble": option.value}));
+                    console.log(option);}}/>
+                    </div>
+        </label>
+
+        <label>
+        <p>Food Safety</p>
+        
+        <div style={{
+                        width:"200px",
+                        margin:"auto"}}>
+        <Select  
+                    options={food}
+                    getOptionValue={(option)=>option.value}
+                    onChange={(option)=>{(Setmateria({...materia,"FoodSafety": option.value}));
+                    console.log(option);}}/>
+                    </div>
         </label>
 
         <label>
             <p> Mount Material</p>
         </label>
-            <button className="printerButton" onClick={()=> navigate(`./MountMaterial`)}>Mount Material</button>
+        <div style={{
+                        width:"200px",
+                        margin:"auto"}}>
+        <Select  
+                    options={material}
+                    getOptionValue={(option)=>option.value}
+                    onChange={(option)=>{;
+                    console.log(option);}}/>
+                    </div>
 
         <button className="printerButton">Modify</button>
             </div>

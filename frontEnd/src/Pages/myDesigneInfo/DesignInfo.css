@@ -5,11 +5,13 @@
     border: 2px solid rgb(180, 176, 176);
     border-radius: 10px;
     padding: 10px;
+    
       
 }
 
 .viewerPosition{
     margin: auto;
+    border: 3px solid black;
 }
 
 .designInfo{

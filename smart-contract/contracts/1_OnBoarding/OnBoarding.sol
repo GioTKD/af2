@@ -70,6 +70,8 @@ contract OnBoarding {
         emit newPrinterAddition(msg.sender, true);
     }
 
+
+
     function getMakerPrinters() 
     public view 
     returns (Printer[] memory mprinters){
@@ -155,11 +157,18 @@ contract OnBoarding {
         }
     }
 
-    function getMaterial(uint256 index)
-    public payable{
-
+function getMaterial(bytes32 name)public view returns(MaterialDetails memory myMaterial){
+        require( Iuser.isMaker(msg.sender) == true, "Operation denied.");
+        require(checkMaterial(name) == true, "No material with this name");
+        for (uint i = 0; i < 3; i++){
+            for(uint j=0; j < materials[msg.sender][MaterialType(i)].length; j++){
+                if (materials[msg.sender][MaterialType(i)][j].name==name){
+                    return materials[msg.sender][MaterialType(i)][j];
+                }
+        }
+        
     }
-
+    }
     
     function removeMaterial(bytes32 name, MaterialType mType) 
     public payable{

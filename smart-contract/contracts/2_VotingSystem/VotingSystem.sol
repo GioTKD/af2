@@ -1,4 +1,3 @@
-
 /**
  * @file marketplace.sol
  * @author Nachiket Tapas <ntapas@unime.it>
@@ -50,6 +49,9 @@ contract VotingSystem{
     //Design details indexed by design index
     mapping (uint256 => designState) public designes;
     uint256 public numDesignes = 0;
+    //Design mapping for take it all
+    mapping(address => mapping(address =>designState)) public AllDesign;
+    mapping(address => address[]) public UserDesign;
 
     //IMPORTANT : USAGE REQUIRED FOR OTHER OPERATIONS 
     //mapping(uint256 => DataLib.DesignToken) trackDesignToken;
@@ -112,14 +114,13 @@ contract VotingSystem{
         //Check for positive commitment
         require(_commitment > 0, "The commitment should be more than 0.");
 
-        require( _commitment / _taur>3,"Not enough commitment made for the design");
+        //require( _commitment / _taur>3,"Not enough commitment made for the design");
         //Check if the commitment parameter matches the commiment sent to the contract.
-        require(
+       /* require(
             msg.value == _commitment,
             "The announcement didn't receive the commitment."
-        ); //chiedere a nachiket
+        );*/ //chiedere a nachiket
         //require(_commitment <= ContractToken.balanceOf(msg.sender), "doesn't have enough tokens");
-
         //Design index
         uint256 j = numDesignes;
 
@@ -164,7 +165,6 @@ contract VotingSystem{
         } else {
             designes[j].deltaExp = _deltaExp;
         }
-
         //Setting the value for reveal
         if (_deltaReveal == 0) {
             designes[j].deltaReveal = 600;
@@ -172,7 +172,7 @@ contract VotingSystem{
             designes[j].deltaReveal = _deltaReveal;
         }*/
         designes[j].deltaExp = 20000;
-        //designes[j].deltaReveal = 600;
+        designes[j].deltaReveal = 600;
 
         //Set the status to be created
 
@@ -188,12 +188,40 @@ contract VotingSystem{
         //Filehash to ensure file integrity
         //Index to use for search
         //Vendor address for source verification
+/*
+        designState memory newDesign = designState(
+            _fileHash,
+            designes[j].vendor,
+            designes[j].timestamp,
+            designes[j].balance,
+            designes[j].statusPhase,
+            designes[j].taup,
+            designes[j].taur,
+            designes[j].deltaExp,
+            designes[j].deltaReveal
+            designes[j].result1,
+            designes[j].statusPhase
+
+
+        );
+*/
         emit newDesignAvailable(_fileHash, j, msg.sender);
+    }
+
+    function getDesignes()
+    public view
+    returns(designState[] memory mdesign){
+        mdesign = new designState[](numDesignes); 
+        for(uint256 i = 0; i < numDesignes; i++){
+            mdesign[i] = designes[i];
+        }
+        return mdesign;
     }
 
     function getNumDesignes() public view returns (uint256) {
         return numDesignes;
     }
+
 
     //Reader function to get designe details at _index
     function getDesigne(uint256 _index) public view returns (designState memory) {

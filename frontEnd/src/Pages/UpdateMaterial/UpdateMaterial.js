@@ -40,14 +40,22 @@ useEffect(() => {
   //console.log(id)
   async function getMat(){
   const onboard = new OnBoarding();
-  var mate = await onboard.getMaterials()
+  const web3 = new Web3();
+  var mate = await onboard.getMaterials();
+  console.log(mate[0].name)
+  console.log(id)
+  //var mats = await onboard.getMaterial(id)
   //let mats = mate[id]
   //console.log(mats)
-  console.log(mate)
-  SetMaterial({name: web3.utils.hexToUtf8(mate[id][name])})
-  console.log(Material)
+  SetMaterial({name:web3.utils.hexToUtf8(mate[parseInt(id)].name)})
+  SetquantityKG(mate[id].quantityKG)
+  SetprintTemp(mate[id].printTemperature)
+  SetBedTemp(mate[id].bedTemperature)
+  SetColor(mate[id].color)
+  Settype(mate[id].mType)
   }
   getMat();
+  console.log(Material.color)
 },[])
 
 const material=[
@@ -73,8 +81,12 @@ const material=[
 
 async function UpdateMats(){
   const onboarding = new OnBoarding();
-  console.log(name)
-  var mats = await onboarding.updateMaterial(Web3.utils.hexToAscii(Material[0]),type,colore,quantityKG,printTemp,bedTemp);
+  console.log(Material.name)
+  console.log(type)
+  console.log(colore)
+  console.log(quantityKG)
+  console.log(printTemp)
+  var mats = await onboarding.updateMaterial(Material.name,type,colore,quantityKG,printTemp,bedTemp);
   console.log(mats)
 
 }
@@ -98,6 +110,7 @@ async function checkMaterial(){
                         width:"200px",
                         margin:"auto"}}>
                    <Select  isMulti 
+                   placeholder={type ? (material[type].label): 0}
                     options={material}
                     getOptionValue={(option)=>option.value}
                     onChange={(option)=>{handleChange(option);
@@ -108,17 +121,18 @@ async function checkMaterial(){
                     width:"200px",
                     margin:"auto"}}>
                       <Select isMulti 
+                      placeholder={colore ? (material[colore].label) : 0}
                       options={color}
                       getOptionValue={(option)=>option.value}
                       />
 
                   </div>
           <p>QuantityKg</p>  
-          <input type="number" placeholder={Material[3]+ " KG"} onChange={(event)=>{SetquantityKG(event.target.value)}}></input>
+          <input type="number" placeholder={quantityKG+ " KG"} onChange={(event)=>{SetquantityKG(event.target.value)}}></input>
           <p>PrintTemp</p>
-          <input type="number" placeholder={Material[4]+ " °C"} onChange={(event)=>{SetprintTemp(event.target.value)}}></input>
+          <input type="number" placeholder={printTemp+ " °C"} onChange={(event)=>{SetprintTemp(event.target.value)}}></input>
           <p>bedTemp</p>
-          <input type="number" placeholder={Material[5]+" °C"} onChange={(event)=>{SetBedTemp(event.target.value)}}></input><br/>
+          <input type="number" placeholder={bedTemp+" °C"} onChange={(event)=>{SetBedTemp(event.target.value)}}></input><br/>
           <button className='next1' onClick={(UpdateMats)}>Update Material</button>
         </div>
     </div>

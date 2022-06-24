@@ -14,8 +14,6 @@ export default class OnBoarding extends Web3Istance{
 //address,name,materialSupported,nozzles,mountedNozzles,printTemp,bedTemp,volume,soluble,foodSafety
         async addPrinter(printerInfo){
             let account=await this.checkIfWalletIsConnected();
-            console.log("qua")
-            console.log(printerInfo["address"]);
             await this.contract.methods.addPrinter(
                 printerInfo.address,
                 this.utils.fromAscii(printerInfo.name),
@@ -33,6 +31,7 @@ export default class OnBoarding extends Web3Istance{
             let account = await this.checkIfWalletIsConnected();
             let result=await this.contract.methods.getMakerPrinters().call({from:account});
            console.log(account)
+           console.log(result)
             return result;
         }
         
@@ -85,6 +84,16 @@ export default class OnBoarding extends Web3Istance{
            console.log(account)
            console.log(result)
             return result;
+        }
+
+        async getMaterial(name,type){
+            let account = await this.checkIfWalletIsConnected();
+            let result = await this.contract.methods.getMaterial(
+                name,
+                type
+            ).call({from:account});
+            return result;
+
         }
 
         async CheckMaterial(name){

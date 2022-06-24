@@ -37,7 +37,7 @@ pragma experimental ABIEncoderV2;
         address vendor;
         uint256 timestamp;
         uint256 balance;
-        address manager;
+        //address manager;
         status statusPhase;
         uint256 taup;
         uint256 taur;

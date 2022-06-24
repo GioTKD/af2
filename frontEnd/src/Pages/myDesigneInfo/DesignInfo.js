@@ -2,7 +2,7 @@ import { getDesigne } from "../../data/data";
 import { useParams } from "react-router-dom";
 import { UserNav } from "../../component/Navbar/homeNav";
 import './DesignInfo.css'
-import { Stl } from "../../component/STLviewer/Stl";
+import StlRenderer from "../AddDesign/StlRenderer";
 export default function DesignInfo(){
     let param = useParams();
     
@@ -48,10 +48,11 @@ export default function DesignInfo(){
             <UserNav/>
             <div className="stl_render">
                 <h1>{design.name}</h1>
-                <Stl design_path={design_path}/>
+                <StlRenderer file={design_path} />
                 <div className="designInfo">                    
                     <p>{design.info}</p>
                     <button className="printButton" onClick={startPrint}>Stampa</button>
+                    
                 </div>
             </div>
         </div>

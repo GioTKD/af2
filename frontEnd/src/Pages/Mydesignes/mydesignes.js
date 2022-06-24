@@ -4,19 +4,57 @@ import cilindro from '../../images/cilindro.png'
 import coniglio from '../../images/Bunny.png'
 import portachiavi from '../../images/portachiavi.png'
 import { UserNav } from '../../component/Navbar/homeNav'
+import metamask from '../../images/metamsak.png'
 //import { useNavigate } from 'react-router-dom'
 import './myDesignes.css'
+import VotingSystem from '../../SmartContracts/VotingSystem/VotingSystem'
+import { useEffect, useState } from 'react'
+import Web3 from 'web3'
+import { useNavigate } from 'react-router-dom';
+
 
 export default function MyDesignes(){
+
+    const [design,Setdesign] = useState([]);
+    const [designList,SetDesignList] = useState([]);
+    const navigate = useNavigate();
+
+
+    let result ="prova"
+
+    useEffect(()=>{
+        async function getDesign(){
+            const votin = new VotingSystem()
+            let web3 = new Web3();
+            var des = await votin.getDesigns();
+            console.log(des);
+            Setdesign(des);
+             result = des.map((value,key)=>{
+                return(
+                        <div className='designModel' key={key}>
+                            <img  className="cube"alt="" src={portachiavi}/>
+                            <h3>**NAME OF DESIGN**</h3>
+                            <button className='next1' onClick={()=>navigate(`/mydesignes/Portachiavi`)} >See Details</button>          
+                            </div>
+                )
+            })
+            SetDesignList(result)
+        }
+        getDesign();
+    },[])
 
     return(
         <div className='designesList'>
         <UserNav/>
         <h1>My designes</h1>
             <div className="flexDesignes">
-                
-                
-                
+
+
+            <div className='provaFun'>
+                    {designList}
+            </div>
+
+{/*           
             <div className='provaFun'>
                 <a href="mydesignes/Portachiavi">
                     <div className='designModel'>
@@ -26,6 +64,7 @@ export default function MyDesignes(){
                     </div>
                 </a>
             </div>
+     
                 
                 
                 
@@ -77,7 +116,7 @@ export default function MyDesignes(){
                 </a>
             </div>
 
-
+    */}
             </div>
         </div>
     )

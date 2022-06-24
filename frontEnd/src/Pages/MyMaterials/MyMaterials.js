@@ -68,7 +68,7 @@ export default function MyMaterials() {
                 <td key={value.printTemperature+"Printer"}>{value.printTemperature}</td>
                 <td key={value.bedTemperature+"Bed"}>{value.bedTemperature}</td>
                 <td><button className='next1' onClick={()=>handleSubmit(value.name,value.mType,key)}>Remove</button></td>
-                <td><button className='next1' onChange={SetAction("Update")}  onClick={()=>navigate(`/UpdateMaterial/${key}`,{state:{prov:"ciao"}})} >Update</button></td>
+                <td><button className='next1' onChange={SetAction("Update")}  onClick={()=>navigate(`/UpdateMaterial/${key.toString()}`,{state:{prov:"ciao"}})} >Update</button></td>
 
         </tr>)
   

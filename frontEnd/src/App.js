@@ -17,6 +17,9 @@ import AddMaterials from "./Pages/Materials/AddMaterials"
 import MyMaterials from './Pages/MyMaterials/MyMaterials';
 import MountMaterial from './Pages/MountMaterial/MountMaterial';
 import UpdateMaterial from './Pages/UpdateMaterial/UpdateMaterial';
+import AddDesign from './Pages/AddDesign/AddDesign';
+
+
 
 
 /*export const injected = new InjectedConnector({ supportedChainIds: [1, 3, 4, 5, 42, 56, 97,1337] });
@@ -74,6 +77,7 @@ function App() {
           <Route path="MyMaterials" element={<MyMaterials/>}/>
           <Route path ="myprinters/Modify/:id/MountMaterial" element={<MountMaterial/>}/>
           <Route path="UpdateMaterial/:id" element={<UpdateMaterial />}/>
+          <Route path="AddDesign" element={<AddDesign/>}/>
           {/*<Route path="MyMaterials/UpdateMaterial/:id" element={<UpdateMaterial/>}/>*/}
 
     </Routes>
