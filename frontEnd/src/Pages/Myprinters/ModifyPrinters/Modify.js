@@ -6,18 +6,22 @@ import { useEffect} from "react";
 import { useState } from "react";
 import OnBoarding from "../../../SmartContracts/OnBoarding/OnBoarding";
 import Select from 'react-select';
+import Web3 from "web3";
 
 export default function Modify(){
 
     const [NamePrinter,SetNamePrinter] = useState("");
     const [Nozzles,SetNozzles] = useState(0);
-    const [Soluble,SetSoluble] = useState(true);
+    const [Soluble,SetSoluble] = useState(0);
+    const [foods,Setfood] = useState(0)
     const navigate=useNavigate();
-    let {id}  = useParams();
+    const [materials,SetMaterials] = useState([{}]);
+    const[SelectMats,SetSelectMats] = useState([{}]);
+    let {id}  = useParams(); 
     console.log(id)
 
     const[materia,Setmateria] = useState({});
-
+    let web3 = new Web3();
 
     const material=[
         {value:"0" , label:"ABS"},
@@ -44,21 +48,52 @@ export default function Modify(){
         SetSoluble(!Soluble)
     }
 
+    async function getMat(name,Type){
+        const onboarding = new OnBoarding();
+       // var mat = await onboarding.getMaterial(name,type)
+    }
+
     async function LoadPrinterMaker(){
         const onboarding = new OnBoarding();
         var printer = await onboarding.getPrinter(id);
-/*        SetNamePrinter(printer.name)
-        SetNozzles(printer.nozzles)
-        SetSoluble(printer.soluble)
-        */
+        SetNozzles(printer.mountedNozzles)
+        SetSoluble(printer.soluble === false ? 0 : 1)
+        Setfood(printer.foodSafety)
        console.log(printer)    
+       console.log(printer.soluble===false?"0":"1")
     return printer;
+    }
+
+    async function ModifyPrinter(){
+        const onBoarding = new OnBoarding();
+        var printer = ModifyPrinter(
+            id,
+            {
+                
+            }
+        )
+    }
+
+    async function getMaterials(){
+        const onboard = new OnBoarding();
+        var materials = await onboard.getMaterials();
+        materials.forEach((val,index) => {
+            SetMaterials(
+                [...materials,{name: val.name, type: val.mType,color: val.color,quantityKG: val.quantityKG, printTemp: val.printTemperature, bedTemp: val.bedTemperature}]
+            )
+            SetSelectMats(
+                [...SelectMats,{value: index.toString(),label : web3.utils.hexToUtf8(val.name) }]
+            )
+        });
+        
     }
 
     useEffect(()=>{
         LoadPrinterMaker();
         console.log(id)
         console.log(NamePrinter)
+        console.log(parseInt(false))
+        getMaterials();
     },[])
 
 
@@ -86,13 +121,9 @@ export default function Modify(){
             <h1>Modify Printer</h1>
             <div className="SignIn">
                 
-        <label>
-            <p>Name : {/*id*/}</p>
-            <input type="text" placeholder="Name" onChange={(event)=> SetNamePrinter(event.target.value)}/>
-        </label>
 
         <label>
-        <p>NozzlesMounted :{/*Nozzles*/}</p>
+        <p>NozzlesMounted :{Nozzles}</p>
         <p><input type="number" placeholder="nozzles"onChange={(event)=> SetNozzles(event.target.value)}/></p>
         </label>
 
@@ -104,6 +135,7 @@ export default function Modify(){
                         margin:"auto"}}>
         <Select 
                     options={solub}
+                    placeholder={Soluble ? (solub[Soluble].label) : "No"}
                     getOptionValue={(option)=>option.value}
                     onChange={(option)=>{(Setmateria({...materia,"soluble": option.value}));
                     console.log(option);}}/>
@@ -118,6 +150,7 @@ export default function Modify(){
                         margin:"auto"}}>
         <Select  
                     options={food}
+                    placeholder={foods ? (food[foods].label) : "No"}
                     getOptionValue={(option)=>option.value}
                     onChange={(option)=>{(Setmateria({...materia,"FoodSafety": option.value}));
                     console.log(option);}}/>
@@ -131,7 +164,7 @@ export default function Modify(){
                         width:"200px",
                         margin:"auto"}}>
         <Select  
-                    options={material}
+                    options={SelectMats}
                     getOptionValue={(option)=>option.value}
                     onChange={(option)=>{;
                     console.log(option);}}/>

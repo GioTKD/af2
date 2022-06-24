@@ -61,6 +61,13 @@ export default class OnBoarding extends Web3Istance{
                 console.log(result)
            }
 
+        async ModifyPrinter(index,printerData){
+            let account = await this.checkIfWalletIsConnected();
+            printerData.mountMaterial.name = this.web3.utils.fromAscii(printerData.mountedMaterial.name);
+            let printer =await this.contract.methods.ModifyPrinter(index,printerData.mountedMaterial,printerData.soluble,printerData.foodSafety).send({from:account});
+            return printer;
+        }
+
         async updateMaterial(name, type, color, quantityKG, printTemp,bedTemp){
             let account = await this.checkIfWalletIsConnected();
             await this.contract.methods.updateMaterial(this.utils.asciiToHex(name), type, color, quantityKG, printTemp,bedTemp).send({from:account});
