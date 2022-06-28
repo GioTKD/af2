@@ -54,6 +54,17 @@ export default function MyDesignes(){
                     {designList}
             </div>
 
+            <div className='provaFun'>
+                <a href="mydesignes/Portachiavi">
+                    <div className='designModel'>
+                        <img  className="cube"alt="" src={portachiavi}/>
+                        <h3>Portachiavi Unime</h3>
+                        <p>Questo è un design di test per la stampa 3D di un portachiavi</p>
+                    </div>
+                </a>
+            </div>
+     
+
 {/*           
             <div className='provaFun'>
                 <a href="mydesignes/Portachiavi">

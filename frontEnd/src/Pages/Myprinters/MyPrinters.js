@@ -50,8 +50,8 @@ export default function MyPrinters(){
                 
                 return (<tr key={key}>
                             <td key={value.name} >{web3.utils.toUtf8(value.name)}</td>
-                            <td key={value.volume+"volume"}>{value.volume}</td>
-                            <td key={value.maxPrintTemperature+ "temp"}>{value.maxPrintTemperature}</td>
+                            <td key={value.mountedNozzles+"volume"}>{value.mountedNozzles}</td>
+                            <td key={value.soluble+ "temp"}>{value.soluble}</td>
                             <td><button className="next1" onClick={()=>navigate(`/myprinters/Modify/${key}`)}>Modify</button></td>
                             <td><button className="next1" onClick={handleSubmit}>Remove Printer</button></td>
                 </tr>)
@@ -85,7 +85,7 @@ export default function MyPrinters(){
             </tbody>
             </table>
             </div>
-        <div className='SignIn'>
+        <div className='SignIn' style={{border:'0px'}}>
         <button className='next1' onClick={()=>navigate('/addprinter')}>Add Printer</button>
         </div>
         </div>

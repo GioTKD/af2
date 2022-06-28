@@ -129,13 +129,23 @@ contract OnBoarding {
         return materialsName[msg.sender];
     }
 
-    function ModifyPrinter(uint256 index, MaterialDetails memory mountedMaterial, bool soluble,bool foodSafety)
+        function equals(MaterialDetails storage _first,MaterialDetails memory _second) internal view returns (bool) {
+        // Just compare the output of hashing all fields packed
+        return(keccak256(abi.encodePacked(_first.name, _first.mType,_first.color,_first.quantityKG,_first.printTemperature,_first.bedTemperature)) == keccak256(abi.encodePacked(_second.name, _second.mType,_second.color,_second.quantityKG,_second.printTemperature,_second.bedTemperature)));
+    }
+
+
+    function ModifyPrinter(uint256 index, bool soluble,bool foodSafety, uint256 mountedNozzles, MaterialDetails memory mountedMaterial)
     public payable{
         require( Iuser.isPlayer(msg.sender) == true, "Player not in the system.");
         require( Iuser.isMaker(msg.sender) == true, "Only Maker can get their Printers.");
-        printers[msg.sender][makerPrinters [msg.sender][index]].mountedMaterial = mountedMaterial;
+        bool flag = equals(printers[msg.sender][makerPrinters [msg.sender][index]].mountedMaterial, mountedMaterial);
+        if(!flag){
+            printers[msg.sender][makerPrinters [msg.sender][index]].mountedMaterial = mountedMaterial;
+        }
         printers[msg.sender][makerPrinters [msg.sender][index]].soluble = soluble;
         printers[msg.sender][makerPrinters [msg.sender][index]].foodSafety = foodSafety;
+        printers[msg.sender][makerPrinters[msg.sender][index]].mountedNozzles = mountedNozzles;
     }
 
     function getMaterials()

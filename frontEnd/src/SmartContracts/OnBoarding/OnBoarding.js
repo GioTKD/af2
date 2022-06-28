@@ -43,7 +43,6 @@ export default class OnBoarding extends Web3Istance{
         async getPrinter(index){
             let account = await this.checkIfWalletIsConnected();
             let result = await this.contract.methods.getMakerPrinter(index).call({from:account});
-            console.log("onboard")
             return result;
         }
 
@@ -63,8 +62,14 @@ export default class OnBoarding extends Web3Istance{
 
         async ModifyPrinter(index,printerData){
             let account = await this.checkIfWalletIsConnected();
-            printerData.mountMaterial.name = this.web3.utils.fromAscii(printerData.mountedMaterial.name);
-            let printer =await this.contract.methods.ModifyPrinter(index,printerData.mountedMaterial,printerData.soluble,printerData.foodSafety).send({from:account});
+            printerData.MaterialDetails.name =  ethers.utils.hexZeroPad(printerData.MaterialDetails.name);
+            console.log(printerData.MaterialDetails.name)
+            let printer =await this.contract.methods.ModifyPrinter(index,
+                printerData.Soluble,
+                printerData.foodSafety,
+                parseInt(printerData.mountedNozzles),
+                printerData.MaterialDetails
+                ).send({from:account});
             return printer;
         }
 

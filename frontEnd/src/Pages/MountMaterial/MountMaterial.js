@@ -23,8 +23,7 @@ export default function MountMaterial() {
               
           })
           setMaterial(values);
-         // console.log(values)
-      }
+              }
       
       const handleSubmit = async(event)=>{
         event.preventDefault();

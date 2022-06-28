@@ -15,10 +15,10 @@ export default function Modify(){
     const [Soluble,SetSoluble] = useState(0);
     const [foods,Setfood] = useState(0)
     const navigate=useNavigate();
-    const [materials,SetMaterials] = useState([{}]);
+    const [materials,SetMaterials] = useState({});
     const[SelectMats,SetSelectMats] = useState([{}]);
+    const [ print,Setprint] = useState({});
     let {id}  = useParams(); 
-    console.log(id)
 
     const[materia,Setmateria] = useState({});
     let web3 = new Web3();
@@ -29,49 +29,34 @@ export default function Modify(){
         {value:"2",label:"PETG"}]
 
     const food = [
-        {value:"0", label:"Si"},
-        {value:"1",label:"No"}]
+        {value:"1", label:"Si"},
+        {value:"0",label:"No"}]
 
     const solub = [
-        {value:"0", label:"Si"},
-        {value:"1",label:"No"}]
+        {value:"1", label:"Si"},
+        {value:"0",label:"No"}]
 
-    
-
-    async function DataChange(){
-    /*    console.log(NamePrinter)
-        console.log(Nozzles)
-        console.log(Soluble)
-    */}
-
-    async function onClickSol(){
-        SetSoluble(!Soluble)
-    }
-
-    async function getMat(name,Type){
-        const onboarding = new OnBoarding();
-       // var mat = await onboarding.getMaterial(name,type)
-    }
 
     async function LoadPrinterMaker(){
         const onboarding = new OnBoarding();
         var printer = await onboarding.getPrinter(id);
         SetNozzles(printer.mountedNozzles)
         SetSoluble(printer.soluble === false ? 0 : 1)
-        Setfood(printer.foodSafety)
-       console.log(printer)    
-       console.log(printer.soluble===false?"0":"1")
+        Setprint({...print,mountedNozzles:printer.mountedNozzles,soluble:printer.soluble,foodSafety:printer.foodSafety})
+        Setfood(printer.foodSafety)    
     return printer;
     }
 
     async function ModifyPrinter(){
         const onBoarding = new OnBoarding();
-        var printer = ModifyPrinter(
+        Setprint({...print, soluble: Soluble,foodSafety: foods,/*mountedNozzles:Nozzles,*/ type: materials});
+        console.log(print)
+
+        var printer = await onBoarding.ModifyPrinter(
             id,
-            {
-                
-            }
+            print
         )
+        return printer;
     }
 
     async function getMaterials(){
@@ -79,10 +64,10 @@ export default function Modify(){
         var materials = await onboard.getMaterials();
         materials.forEach((val,index) => {
             SetMaterials(
-                [...materials,{name: val.name, type: val.mType,color: val.color,quantityKG: val.quantityKG, printTemp: val.printTemperature, bedTemp: val.bedTemperature}]
+                [...materials,{name: web3.utils.toAscii(val.name), type: val.mType,color: val.color,quantityKG: val.quantityKG, printTemp: val.printTemperature, bedTemp: val.bedTemperature}]
             )
             SetSelectMats(
-                [...SelectMats,{value: index.toString(),label : web3.utils.hexToUtf8(val.name) }]
+                [...SelectMats,{value: index.toString(),label : web3.utils.toAscii(val.name) }]
             )
         });
         
@@ -90,9 +75,6 @@ export default function Modify(){
 
     useEffect(()=>{
         LoadPrinterMaker();
-        console.log(id)
-        console.log(NamePrinter)
-        console.log(parseInt(false))
         getMaterials();
     },[])
 
@@ -124,7 +106,7 @@ export default function Modify(){
 
         <label>
         <p>NozzlesMounted :{Nozzles}</p>
-        <p><input type="number" placeholder="nozzles"onChange={(event)=> SetNozzles(event.target.value)}/></p>
+        <p><input type="number" placeholder="nozzles"onChange={(event)=> Setprint({...print,mountedNozzles:event.target.value})}/></p>
         </label>
 
         <label>
@@ -137,7 +119,7 @@ export default function Modify(){
                     options={solub}
                     placeholder={Soluble ? (solub[Soluble].label) : "No"}
                     getOptionValue={(option)=>option.value}
-                    onChange={(option)=>{(Setmateria({...materia,"soluble": option.value}));
+                    onChange={(option)=>{(Setprint({...print,"soluble": Boolean(parseInt(option.value))}));
                     console.log(option);}}/>
                     </div>
         </label>
@@ -150,11 +132,11 @@ export default function Modify(){
                         margin:"auto"}}>
         <Select  
                     options={food}
-                    placeholder={foods ? (food[foods].label) : "No"}
+                    //placeholder={foods ? (food[foods].label) : "No"}
                     getOptionValue={(option)=>option.value}
-                    onChange={(option)=>{(Setmateria({...materia,"FoodSafety": option.value}));
-                    console.log(option);}}/>
-                    </div>
+                    onChange={(option)=>{(Setprint({...print,"foodSafety": Boolean(parseInt(option.value))}));
+                    console.log(option.value);}}/>
+                    </div>  
         </label>
 
         <label>
@@ -166,11 +148,12 @@ export default function Modify(){
         <Select  
                     options={SelectMats}
                     getOptionValue={(option)=>option.value}
-                    onChange={(option)=>{;
-                    console.log(option);}}/>
+                    onChange={(option)=>{
+                    Setprint({...print,'MaterialDetails':materials.find(x => x.name == option.label)})
+                    console.log(print);}}/>
                     </div>
 
-        <button className="printerButton">Modify</button>
+        <button className="printerButton" onClick={ModifyPrinter}>Modify</button>
             </div>
         </div>
         </div>

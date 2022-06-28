@@ -101,7 +101,7 @@ export default function MyMaterials() {
             {materialsList}
           </tbody>
         </table>
-        <div className='SignIn'>
+        <div className='SignIn' style={{border:'0px'}}>
         <button className='next1' onClick={()=>navigate('/AddMaterials')}>Add Materials</button>
         </div>
         </div>
