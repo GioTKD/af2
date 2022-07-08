@@ -20,7 +20,6 @@ export default function Modify(){
     const [ print,Setprint] = useState({});
     let {id}  = useParams(); 
 
-    const[materia,Setmateria] = useState({});
     let web3 = new Web3();
 
     const material=[
@@ -43,7 +42,7 @@ export default function Modify(){
         SetNozzles(printer.mountedNozzles)
         SetSoluble(printer.soluble === false ? 0 : 1)
         Setprint({...print,mountedNozzles:printer.mountedNozzles,soluble:printer.soluble,foodSafety:printer.foodSafety})
-        Setfood(printer.foodSafety)    
+        Setfood(printer.foodSafety === false ? 0 : 1)    
     return printer;
     }
 
@@ -51,12 +50,17 @@ export default function Modify(){
         const onBoarding = new OnBoarding();
         Setprint({...print, soluble: Soluble,foodSafety: foods,/*mountedNozzles:Nozzles,*/ type: materials});
         console.log(print)
-
         var printer = await onBoarding.ModifyPrinter(
             id,
             print
         )
-        return printer;
+
+        var mount = await onBoarding.mountMaterial(
+            web3.utils.toAscii(materials[0].name),
+            0,
+            id
+        )
+        return mount;
     }
 
     async function getMaterials(){
@@ -64,10 +68,11 @@ export default function Modify(){
         var materials = await onboard.getMaterials();
         materials.forEach((val,index) => {
             SetMaterials(
-                [...materials,{name: web3.utils.toAscii(val.name), type: val.mType,color: val.color,quantityKG: val.quantityKG, printTemp: val.printTemperature, bedTemp: val.bedTemperature}]
+                [...materials,{name: web3.utils.toUtf8(val.name), type: val.mType,color: val.color,quantityKG: val.quantityKG, printTemp: val.printTemperature, bedTemp: val.bedTemperature}]
             )
+            console.log(materials[0].name)
             SetSelectMats(
-                [...SelectMats,{value: index.toString(),label : web3.utils.toAscii(val.name) }]
+                [...SelectMats,{value: index.toString(),label : web3.utils.toUtf8(val.name) }]
             )
         });
         
@@ -78,23 +83,6 @@ export default function Modify(){
         getMaterials();
     },[])
 
-
-    /*const handleChange = (option,type)=>{
-        let values=[]
-        switch(type){
-            case "food" : 
-        }
-        option.map((value)=>{
-            values.push(parseInt(value.value));
-            
-        })
-        SetMateriale(values);
-        if(values.length===0)
-            printerData['material']=undefined;
-        console.log(printerData['material']);
-        
-
-    }*/
 
     return(
         <div>
@@ -120,10 +108,10 @@ export default function Modify(){
                     placeholder={Soluble ? (solub[Soluble].label) : "No"}
                     getOptionValue={(option)=>option.value}
                     onChange={(option)=>{(Setprint({...print,"soluble": Boolean(parseInt(option.value))}));
-                    console.log(option);}}/>
+                    console.log(option.value);}}/>
                     </div>
         </label>
-
+        
         <label>
         <p>Food Safety</p>
         
@@ -132,7 +120,7 @@ export default function Modify(){
                         margin:"auto"}}>
         <Select  
                     options={food}
-                    //placeholder={foods ? (food[foods].label) : "No"}
+                    placeholder={foods ? (food[foods].label) : "No"}
                     getOptionValue={(option)=>option.value}
                     onChange={(option)=>{(Setprint({...print,"foodSafety": Boolean(parseInt(option.value))}));
                     console.log(option.value);}}/>

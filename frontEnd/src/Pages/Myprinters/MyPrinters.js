@@ -37,9 +37,10 @@ export default function MyPrinters(){
             const web3 = new Web3()
             var printer = await onboarding.getPrinters();
             console.log("ciao")
-            console.log(printer)
+            console.log(printer.soluble)
            result= printer.map((value,key)=>{
-               
+               console.log(value.soluble)
+               console.log(value.foodSafety)
             const handleSubmit = async(event)=>{
                 event.preventDefault();
                 const onboarding = new OnBoarding();
@@ -50,8 +51,9 @@ export default function MyPrinters(){
                 
                 return (<tr key={key}>
                             <td key={value.name} >{web3.utils.toUtf8(value.name)}</td>
-                            <td key={value.mountedNozzles+"volume"}>{value.mountedNozzles}</td>
-                            <td key={value.soluble+ "temp"}>{value.soluble}</td>
+                            <td key={value.mountedNozzles+"Nozzles"}>{value.mountedNozzles}</td>
+                            <td key={value.soluble+ "Solub"}>{value.soluble.toString()}</td>
+                            <td key={value.soluble+"foodSafety"}>{value.foodSafety.toString()}</td>
                             <td><button className="next1" onClick={()=>navigate(`/myprinters/Modify/${key}`)}>Modify</button></td>
                             <td><button className="next1" onClick={handleSubmit}>Remove Printer</button></td>
                 </tr>)
@@ -78,6 +80,7 @@ export default function MyPrinters(){
                     <th>Name</th>
                     <th>NozzlesMounted</th>
                     <th>Soluble</th>
+                    <th>foodSafety</th>
                     <th>Modify</th>
                     <th>Remove</th>
                 </tr>     

@@ -135,14 +135,10 @@ contract OnBoarding {
     }
 
 
-    function ModifyPrinter(uint256 index, bool soluble,bool foodSafety, uint256 mountedNozzles, MaterialDetails memory mountedMaterial)
+    function ModifyPrinter(uint256 index, bool soluble,bool foodSafety, uint256 mountedNozzles)
     public payable{
         require( Iuser.isPlayer(msg.sender) == true, "Player not in the system.");
         require( Iuser.isMaker(msg.sender) == true, "Only Maker can get their Printers.");
-        bool flag = equals(printers[msg.sender][makerPrinters [msg.sender][index]].mountedMaterial, mountedMaterial);
-        if(!flag){
-            printers[msg.sender][makerPrinters [msg.sender][index]].mountedMaterial = mountedMaterial;
-        }
         printers[msg.sender][makerPrinters [msg.sender][index]].soluble = soluble;
         printers[msg.sender][makerPrinters [msg.sender][index]].foodSafety = foodSafety;
         printers[msg.sender][makerPrinters[msg.sender][index]].mountedNozzles = mountedNozzles;

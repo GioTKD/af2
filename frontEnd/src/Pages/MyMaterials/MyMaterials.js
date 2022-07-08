@@ -41,6 +41,7 @@ export default function MyMaterials() {
     window.location.reload()
   }
 
+
   const getMaterialsName = async()=>{
     const onboard = new OnBoarding();
     await onboard.GetMaterialsName();

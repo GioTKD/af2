@@ -1,5 +1,6 @@
 import Web3Istance from "../Web3";
 import OnBoardingABI from '../../ABIs/OnBoarding.json'
+import { ethers } from "ethers";
 
 export default class OnBoarding extends Web3Istance{
     constructor(){
@@ -62,13 +63,10 @@ export default class OnBoarding extends Web3Istance{
 
         async ModifyPrinter(index,printerData){
             let account = await this.checkIfWalletIsConnected();
-            printerData.MaterialDetails.name =  ethers.utils.hexZeroPad(printerData.MaterialDetails.name);
-            console.log(printerData.MaterialDetails.name)
             let printer =await this.contract.methods.ModifyPrinter(index,
-                printerData.Soluble,
+                printerData.soluble,
                 printerData.foodSafety,
                 parseInt(printerData.mountedNozzles),
-                printerData.MaterialDetails
                 ).send({from:account});
             return printer;
         }
@@ -87,7 +85,12 @@ export default class OnBoarding extends Web3Istance{
 
         async mountMaterial(name, type, printer){
             let account = await this.checkIfWalletIsConnected();
-            await this.contract.methods.mountMaterial(name, type, printer).send({from:account})
+            let res = await this.contract.methods.mountMaterial(
+                this.web3.utils.fromAscii(name),
+                type,
+                printer).send({from:account,gas:4600000});
+                console.log(res)
+                return res;
         }
 
         async getMaterials(){
